@@ -1,0 +1,29 @@
+# Source files (keep only built files)
+src/
+tsconfig.json
+vite.config.ts
+.eslintrc.json
+.prettierrc.json
+
+# Development files
+*.test.*
+*.spec.*
+*.stories.*
+__tests__/
+tests/
+test/
+
+# Documentation
+README.md
+CHANGELOG.md
+LICENSE
+
+# Development dependencies
+node_modules/
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Build tools
+.gitignore
+.npmignore

@@ -1,0 +1,70 @@
+{
+  "name": "fluent-text",
+  "version": "1.0.0",
+  "description": "Un composant React moderne pour le texte fluide",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./styles": "./dist/style.css"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "vite build",
+    "dev": "vite --config vite.dev.config.ts",
+    "preview": "vite preview",
+    "type-check": "tsc --noEmit",
+    "lint": "eslint src --ext .ts,.tsx",
+    "lint:fix": "eslint src --ext .ts,.tsx --fix",
+    "format": "prettier --write src",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "react",
+    "typescript",
+    "component",
+    "ui",
+    "text"
+  ],
+  "author": "Votre nom",
+  "license": "MIT",
+  "peerDependencies": {
+    "react": ">=18.0.0",
+    "react-dom": ">=18.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "@vitejs/plugin-react": "^4.0.0",
+    "eslint": "^8.45.0",
+    "eslint-plugin-react": "^7.33.0",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "prettier": "^3.0.0",
+    "reactstrap": "^9.2.3",
+    "sass": "^1.93.2",
+    "sonner": "^2.0.7",
+    "sweetalert2": "^11.26.2",
+    "typescript": "^5.0.0",
+    "vite": "^4.4.0",
+    "vite-plugin-dts": "^3.5.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/SachaMarits/fluent-text.git"
+  },
+  "bugs": {
+    "url": "https://github.com/SachaMarits/fluent-text/issues"
+  },
+  "homepage": "https://github.com/SachaMarits/fluent-text#readme"
+}

@@ -1,0 +1,21 @@
+.pointer {
+  transition: 0.2s;
+}
+.pointer:hover {
+  cursor: pointer;
+  filter: brightness(90%);
+}
+
+.empty-line-placeholder {
+  border: 2px dashed $primary;
+  background: aliceblue;
+  color: $primary;
+  padding: 5px 10px;
+  text-align: center;
+  border-radius: 4px;
+  &.success {
+    border: 2px dashed #41cd5f;
+    background: #c5e5cd;
+    color: #20a03d;
+  }
+}
