@@ -9,6 +9,8 @@ import { Toaster } from 'sonner';
 import { getContent } from './utils/conversion';
 import ShortenedString from './components/Base/ShortenedString';
 
+import './styles/main.scss';
+
 export const FluentTextPlaceholder = `<div><br></div>`;
 
 interface TextEditorProps {

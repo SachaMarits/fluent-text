@@ -1,0 +1,147 @@
+/* MaterialDesignIcons.com */
+@font-face {
+  font-family: 'Material Design Icons';
+  src: url('fonts/materialdesignicons-webfont.eot');
+  src:
+    url('fonts/materialdesignicons-webfont.eot') format('embedded-opentype'),
+    url('fonts/materialdesignicons-webfont.woff2') format('woff2'),
+    url('fonts/materialdesignicons-webfont.woff') format('woff'),
+    url('fonts/materialdesignicons-webfont.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+.mdi:before,
+.mdi-set {
+  display: inline-block;
+  font: normal normal normal 24px/1 'Material Design Icons';
+  font-size: inherit;
+  text-rendering: auto;
+  line-height: inherit;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.mdi-close::before {
+  content: '\F0156';
+}
+
+.mdi-paperclip::before {
+  content: '\F03E2';
+}
+
+.mdi-chevron-down::before {
+  content: '\F0140';
+}
+
+.mdi-chevron-up::before {
+  content: '\F0143';
+}
+
+.mdi-eye::before {
+  content: '\F0208';
+}
+
+.mdi-minus::before {
+  content: '\F0374';
+}
+
+.mdi-format-color-highlight::before {
+  content: '\F0E31';
+}
+
+.mdi-format-color-text::before {
+  content: '\F069E';
+}
+
+.mdi-color-helper::before {
+  content: '\F0179';
+}
+
+.mdi-align-horizontal-left::before {
+  content: '\F11C2';
+}
+
+.mdi-align-horizontal-right::before {
+  content: '\F11C4';
+}
+
+.mdi-signature-image::before {
+  content: '\F0DFD';
+}
+
+.mdi-file-document-edit::before {
+  content: '\F0DC8';
+}
+
+.mdi-paperclip-plus::before {
+  content: '\F1AC9';
+}
+
+.mdi-fullscreen::before {
+  content: '\F0293';
+}
+
+.mdi-fullscreen-exit::before {
+  content: '\F0294';
+}
+
+.mdi-table-plus::before {
+  content: '\F0A75';
+}
+
+.mdi-image-plus::before {
+  content: '\F087C';
+}
+
+.mdi-plus::before {
+  content: '\F0415';
+}
+
+.mdi-button-cursor::before {
+  content: '\F1B4F';
+}
+
+.mdi-format-size::before {
+  content: '\F027F';
+}
+
+.mdi-format-font::before {
+  content: '\F06D6';
+}
+
+.mdi-text-account::before {
+  content: '\F1570';
+}
+
+.mdi-format-underline::before {
+  content: '\F0287';
+}
+
+.mdi-format-align-center::before {
+  content: '\F0260';
+}
+
+.mdi-format-align-justify::before {
+  content: '\F0261';
+}
+
+.mdi-format-align-left::before {
+  content: '\F0262';
+}
+
+.mdi-format-align-right::before {
+  content: '\F0263';
+}
+
+.mdi-format-bold::before {
+  content: '\F0264';
+}
+
+.mdi-format-italic::before {
+  content: '\F0277';
+}
+
+.mdi-link::before {
+  content: '\F0337';
+}
