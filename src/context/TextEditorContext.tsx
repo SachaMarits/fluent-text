@@ -22,6 +22,8 @@ export interface TextEditorContextType {
   attachments: FluentEditorFile[];
   setAttachments: (attachments: FluentEditorFile[]) => void;
   setIsEditing: (isEditing: boolean) => void;
+  backgroundImage: string;
+  setBackgroundImage: (image: string) => void;
 }
 
 export const TextEditorContext = createContext<TextEditorContextType | undefined>(undefined);

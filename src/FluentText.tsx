@@ -6,7 +6,7 @@ import { TranslationProvider, Language } from './translations';
 import { useBreakpoint } from './hooks/useBreakpoint';
 import { FluentEditorTemplate } from './types/Template';
 import { Toaster } from 'sonner';
-import { getContent } from './utils/conversion';
+import { decodeBase64, getContent } from './utils/conversion';
 import ShortenedString from './components/Base/ShortenedString';
 
 import './styles/main.scss';
@@ -33,6 +33,8 @@ interface TextEditorProps {
   disabled?: boolean;
   emailFormat?: boolean;
   minified?: boolean;
+  noPadding?: boolean;
+  defaultValueIsBase64?: boolean;
 
   // Options
   options?: string[];
@@ -49,7 +51,7 @@ interface TextEditorProps {
 export default function FluentText({
   id = 'text-editor-document-text',
   defaultValue = '',
-
+  defaultValueIsBase64 = false,
   // Layout
   vertical = false,
   textWidth = '600px',
@@ -65,6 +67,7 @@ export default function FluentText({
   disabled = false,
   emailFormat = true,
   minified = false,
+  noPadding = false,
 
   // Options
   options = ['text', 'color', 'image', 'layout', 'element'],
@@ -80,6 +83,7 @@ export default function FluentText({
   const text = useRef<HTMLDivElement>(null);
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [isHoveringAction, setIsHoveringAction] = useState<boolean>(false);
+  const [backgroundImage, setBackgroundImage] = useState<string>('');
   const { isMd } = useBreakpoint();
   const [showAttachmentsState, setShowAttachmentsState] = useState<boolean>(isMd());
   const isInitialized = useRef<boolean>(false);
@@ -144,15 +148,30 @@ export default function FluentText({
     }, 300);
   }, [triggerContentChange]);
 
-  // Enlève les styles dédiés aux emails
+  // Enlève les styles dédiés aux emails mais préserve l'image de fond
   const removeStyles = (html: string) => {
     const tempDiv = document.createElement('div');
     tempDiv.innerHTML = html;
 
-    const textEditorWrapper = tempDiv.querySelector('#text-editor-wrapper');
+    const textEditorWrapper = tempDiv.querySelector('#text-editor-wrapper') as HTMLElement;
 
     if (textEditorWrapper) {
+      // Sauvegarde l'image de fond si elle existe
+      const backgroundImageStyle = textEditorWrapper.style.backgroundImage;
+      const backgroundSize = textEditorWrapper.style.backgroundSize;
+      const backgroundPosition = textEditorWrapper.style.backgroundPosition;
+      const backgroundRepeat = textEditorWrapper.style.backgroundRepeat;
+
       textEditorWrapper.removeAttribute('style');
+
+      // Restaure uniquement l'image de fond
+      if (backgroundImageStyle) {
+        textEditorWrapper.style.backgroundImage = backgroundImageStyle;
+        textEditorWrapper.style.backgroundSize = backgroundSize;
+        textEditorWrapper.style.backgroundPosition = backgroundPosition;
+        textEditorWrapper.style.backgroundRepeat = backgroundRepeat;
+      }
+
       return tempDiv.innerHTML;
     }
     return html;
@@ -171,10 +190,89 @@ export default function FluentText({
     }
   };
 
+  // Fonction pour extraire l'URL de l'image de fond depuis le HTML
+  const extractBackgroundImageUrl = (htmlContent: string): string | null => {
+    // Méthode 1: Chercher dans le HTML brut avec une regex flexible
+    // Gère: url('...'), url("..."), url(...), avec ou sans espaces
+    const regexPatterns = [
+      /background-image\s*:\s*url\(['"]([^'"]+)['"]\)/gi,
+      /background-image\s*:\s*url\(([^)]+)\)/gi,
+    ];
+
+    for (const pattern of regexPatterns) {
+      const match = htmlContent.match(pattern);
+      if (match) {
+        // Extraire l'URL du premier match trouvé
+        const urlMatch = match[0].match(/url\(['"]?([^'")]+)['"]?\)/i);
+        if (urlMatch && urlMatch[1]) {
+          return urlMatch[1].trim();
+        }
+      }
+    }
+
+    // Méthode 2: Parser le HTML et chercher dans l'attribut style de #text-editor-wrapper
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = htmlContent;
+    const wrapper = tempDiv.querySelector('#text-editor-wrapper') as HTMLElement;
+
+    if (wrapper) {
+      // Chercher dans l'attribut style inline
+      const styleAttr = wrapper.getAttribute('style');
+      if (styleAttr) {
+        const styleMatch = styleAttr.match(/background-image\s*:\s*url\(['"]?([^'")]+)['"]?\)/i);
+        if (styleMatch && styleMatch[1]) {
+          return styleMatch[1].trim();
+        }
+      }
+
+      // Chercher dans le style calculé (si le HTML a déjà été injecté)
+      if (wrapper.style.backgroundImage) {
+        const bgImage = wrapper.style.backgroundImage;
+        const urlMatch = bgImage.match(/url\(['"]?([^'")]+)['"]?\)/i);
+        if (urlMatch && urlMatch[1]) {
+          return urlMatch[1].trim();
+        }
+      }
+    }
+
+    return null;
+  };
+
   useEffect(() => {
     if (text.current && !isInitialized.current) {
+      let defaultValueContent = defaultValue;
+      if (defaultValueIsBase64) {
+        defaultValueContent = decodeBase64(defaultValue);
+      }
+
+      // Détecter s'il y a une image de fond dans le contenu
+      let extractedImageUrl = extractBackgroundImageUrl(defaultValueContent);
+
+      if (extractedImageUrl) {
+        extractedImageUrl = extractedImageUrl?.replace(/&quot;/g, '"');
+        setBackgroundImage(extractedImageUrl);
+      }
+
+      // Extraire le contenu interne si defaultValueContent contient une div
+      const tempDiv = document.createElement('div');
+      tempDiv.innerHTML = defaultValueContent;
+
+      // Chercher d'abord #text-editor-wrapper, sinon prendre la première div, sinon garder le contenu tel quel
+      const wrapperDiv = tempDiv.querySelector('#text-editor-wrapper');
+      if (wrapperDiv) {
+        defaultValueContent = wrapperDiv.innerHTML;
+      } else {
+        // Si pas de #text-editor-wrapper, chercher une div simple
+        const firstDiv = tempDiv.querySelector('div');
+        if (firstDiv && tempDiv.children.length === 1 && tempDiv.children[0] === firstDiv) {
+          // Si la div est le seul enfant direct, prendre son contenu
+          defaultValueContent = firstDiv.innerHTML;
+        }
+        // Sinon, garder defaultValueContent tel quel
+      }
+
       const htmlContent = emailFormat
-        ? defaultValue === FluentTextPlaceholder
+        ? defaultValueContent === FluentTextPlaceholder
           ? `
             <table width="100%" border="0" cellspacing="0" id="editor-table">
               <tr>
@@ -185,7 +283,7 @@ export default function FluentText({
                         style="font-family: Verdana, sans-serif; max-width: 560px"
                         face="Verdana, sans-serif, font-size: 16px"
                       >
-                        <td id="text-editor-wrapper">${defaultValue || ''}</td>
+                        <td id="text-editor-wrapper" style="background-image: url(${backgroundImage})">${defaultValueContent || ''}</td>
                       </tr>
                     </table>
                   </center>
@@ -193,13 +291,55 @@ export default function FluentText({
               </tr>
             </table>
           `
-          : removeStyles(defaultValue)
-        : `<div id="text-editor-wrapper">${defaultValue || ''}</div>`;
+          : removeStyles(defaultValueContent)
+        : `<div id="text-editor-wrapper">${defaultValueContent || ''}</div>`;
 
       text.current.innerHTML = htmlContent;
+      const editor = document.getElementById(id) as HTMLElement;
+      editor.style.backgroundSize = 'cover';
+      editor.style.backgroundPosition = 'center';
+      editor.style.backgroundRepeat = 'no-repeat';
+      editor.style.backgroundImage = `url(${extractedImageUrl})`;
+
+      // Si aucune image n'a été trouvée avant, chercher dans le DOM après injection
+      if (!extractedImageUrl) {
+        const wrapper = text.current.querySelector('#text-editor-wrapper') as HTMLElement;
+        if (wrapper && wrapper.style.backgroundImage) {
+          const bgImage = wrapper.style.backgroundImage;
+          // Extrait l'URL de l'image (enlève "url(" et ")" ou les guillemets)
+          const imageUrl = bgImage.replace(/url\(['"]?([^'"]+)['"]?\)/i, '$1');
+          if (imageUrl) {
+            setBackgroundImage(imageUrl.trim());
+          }
+        }
+      }
+
       isInitialized.current = true;
     }
   }, []);
+
+  // Applique l'image de fond sur #text-editor-wrapper dans le contenu
+  useEffect(() => {
+    if (text.current && isInitialized.current) {
+      const wrapper = text.current.querySelector('#text-editor-wrapper') as HTMLElement;
+      if (wrapper) {
+        if (backgroundImage) {
+          wrapper.style.backgroundImage = `url(${backgroundImage})`;
+          wrapper.style.backgroundSize = 'cover';
+          wrapper.style.backgroundPosition = 'center';
+          wrapper.style.backgroundRepeat = 'no-repeat';
+        } else {
+          // Ne supprime que l'image de fond, pas les autres styles
+          if (wrapper.style.backgroundImage) {
+            wrapper.style.backgroundImage = '';
+            wrapper.style.backgroundSize = '';
+            wrapper.style.backgroundPosition = '';
+            wrapper.style.backgroundRepeat = '';
+          }
+        }
+      }
+    }
+  }, [backgroundImage]);
 
   useEffect(() => {
     return () => {
@@ -226,6 +366,8 @@ export default function FluentText({
           setIsEditing,
           isHoveringAction,
           setIsHoveringAction,
+          backgroundImage,
+          setBackgroundImage,
         }}
       >
         <div
@@ -241,7 +383,12 @@ export default function FluentText({
               className={`text-editor-content${responsive ? ' text-editor-responsive' : ''} ${
                 disabled ? 'text-editor-disabled' : ''
               }`}
-              style={{ minWidth: textWidth, width: textWidth, padding: '20px', minHeight: height }}
+              style={{
+                minWidth: textWidth,
+                width: textWidth,
+                padding: noPadding ? '0' : '20px',
+                minHeight: height,
+              }}
               ref={text}
               onClick={e => {
                 handleContentClick(e);

@@ -71,7 +71,10 @@ export const en = {
 
   // Images
   insererImage: 'Insert image',
+  insererImageDeFond: 'Insert background image',
+  imageDeFond: 'Background image',
   enleverAlignement: 'Remove alignment',
+  supprimer: 'Delete',
 
   // Buttons
   ajouterBouton: 'Add button',

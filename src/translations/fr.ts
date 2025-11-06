@@ -71,7 +71,10 @@ export const fr = {
 
   // Images
   insererImage: 'Insérer une image',
+  insererImageDeFond: 'Insérer une image de fond',
+  imageDeFond: 'Image de fond',
   enleverAlignement: "Enlever l'alignement",
+  supprimer: 'Supprimer',
 
   // Boutons
   ajouterBouton: 'Ajouter un bouton',

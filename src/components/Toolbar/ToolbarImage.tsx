@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import TooltipImage from '../Tooltip/TooltipImage';
 import { useTextEditorContext } from '../../context';
 import { useTranslation } from '../../translations';
+import TooltipBackgroundImage from '../Tooltip/TooltipBackgroundImage';
 
 interface ToolbarImageProps {
   text: React.RefObject<HTMLDivElement>;
@@ -50,6 +51,7 @@ const ToolbarImage = ({ text }: ToolbarImageProps) => {
         >
           <i className="mdi mdi-signature-image" />
         </button>
+        <TooltipBackgroundImage text={text} />
       </div>
       {!hideGroupNames && <p className="tool-group-title">{t('image')}</p>}
     </div>

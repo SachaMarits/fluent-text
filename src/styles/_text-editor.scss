@@ -9,6 +9,10 @@
   font-style: normal;
 }
 
+.swal2-container {
+  font-family: 'Roboto', sans-serif;
+}
+
 .text-editor,
 .text-editor-vertical {
   font-family: 'Roboto', sans-serif;
@@ -28,7 +32,7 @@
       .tool-group:first-child {
         border-left: 0;
 
-        .btn-option {
+        .btn-option:first-of-type {
           border-top-left-radius: 16px;
         }
       }

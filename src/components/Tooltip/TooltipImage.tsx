@@ -188,7 +188,7 @@ const TooltipImage = ({ text }: TooltipImageProps) => {
             >
               {t('fermer')}
             </Button>
-            <Button color="success custom-success" onClick={() => handleImageUpload()}>
+            <Button color="success" onClick={() => handleImageUpload()}>
               {t('ajouter')} <i className="mdi mdi-plus" />
             </Button>
           </div>

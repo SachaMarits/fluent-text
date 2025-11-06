@@ -1,8 +1,12 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import React from 'react';
 
 import FluentText from '../FluentText';
 import { fn } from 'storybook/test';
 import { defaultValue } from './FlutentText.defaultvalue';
+import { useArgs } from 'storybook/internal/preview-api';
+import { FluentEditorFile } from '../types/File';
+import templates from './FluentText.templates';
 
 const meta = {
   title: 'FluentText',
@@ -47,6 +51,22 @@ export const DefaultValue: Story = {
   },
 };
 
+export const DefaultValueWithBackground: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story: 'FluentText editor with a default value.',
+      },
+    },
+  },
+  args: {
+    height: 500,
+    defaultValue: templates[2].contentBase64,
+    defaultValueIsBase64: true,
+    onContentChange: fn(),
+  },
+};
+
 export const HideTitlesAndGroupNames: Story = {
   parameters: {
     docs: {
@@ -83,6 +103,28 @@ export const InputWithTextOptionsOnly: Story = {
   },
 };
 
+export const InputWithLinkOnly: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Input field with only link options. <br /> <span style="font-size: 14px; opacity: 0.7;"> You can choose the text options you want to display, in this case only link is displayed. <br /> This is not exclusive for the input field, you can use it for the whole editor.</span>',
+      },
+    },
+  },
+  args: {
+    input: true,
+    height: 130,
+    responsive: true,
+    options: ['text'],
+    textOptions: ['link'],
+    textWidth: '100%',
+    emailFormat: false,
+    hideGroupNames: true,
+    onContentChange: fn(),
+  },
+};
+
 export const VerticalLayout: Story = {
   args: {
     height: 800,
@@ -98,7 +140,7 @@ export const VerticalLayout: Story = {
   },
 };
 
-export const EnableAttachments: Story = {
+export const Attachments: Story = {
   args: {
     height: 500,
     showAttachments: true,
@@ -113,11 +155,50 @@ export const EnableAttachments: Story = {
     setAttachments: () => fn(),
     onContentChange: fn(),
   },
+  render: args => {
+    const [{ attachments }, updateArgs] = useArgs();
 
+    const setAttachments = (newAttachments: React.SetStateAction<FluentEditorFile[]>) => {
+      updateArgs({ attachments: newAttachments });
+    };
+
+    return <FluentText {...args} attachments={attachments} setAttachments={setAttachments} />;
+  },
   parameters: {
     docs: {
       description: {
-        story: 'Enable attachments in the FluentText editor.',
+        story:
+          "Attachments are displayed in the editor. <br /> <span style='font-size: 14px; opacity: 0.7;'> You can add attachments in the editor's toolbar and remove in the floating area located on the bottom left.</span>",
+      },
+    },
+  },
+};
+
+export const Templates: Story = {
+  args: {
+    height: 500,
+    templates,
+    onContentChange: fn(),
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: 'FluentText editor with templates.',
+      },
+    },
+  },
+};
+
+export const Playground: Story = {
+  args: {
+    height: 500,
+    templates,
+    onContentChange: fn(),
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: 'FluentText editor with templates.',
       },
     },
   },

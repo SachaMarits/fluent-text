@@ -12,6 +12,7 @@ export const getContent = (id?: string, returnHtml: boolean = false, minified: b
 
     const tempElement = document.createElement('div');
     tempElement.innerHTML = html;
+    tempElement.style.cssText = textEditor.style.cssText;
 
     const textEditorElement: HTMLDivElement | null = tempElement.querySelector('#text-editor-wrapper');
 
@@ -28,7 +29,8 @@ export const getContent = (id?: string, returnHtml: boolean = false, minified: b
       });
     }
 
-    const rawHtml = tempElement.innerHTML;
+    const styledClone = cloneWithInlineStyles(tempElement);
+    const rawHtml = (styledClone as HTMLElement).outerHTML;
 
     const minifiedHtml = rawHtml
       .replace(/\s+/g, ' ') // Remplacer tous les espaces multiples par un seul espace
@@ -57,4 +59,27 @@ export const getContent = (id?: string, returnHtml: boolean = false, minified: b
 
     return btoa(base64String);
   }
+};
+
+const cloneWithInlineStyles = (element: HTMLElement) => {
+  const clone = element.cloneNode(true) as HTMLElement;
+
+  const applyInlineStyles = (source: HTMLElement, target: HTMLElement) => {
+    const computedStyle = window.getComputedStyle(source);
+    for (const key of computedStyle) {
+      target.style.setProperty(key, computedStyle.getPropertyValue(key));
+    }
+
+    // Recurse sur les enfants
+    for (let i = 0; i < source.children.length; i++) {
+      const sourceChild = source.children[i];
+      const targetChild = target.children[i];
+      if (sourceChild instanceof HTMLElement && targetChild instanceof HTMLElement) {
+        applyInlineStyles(sourceChild, targetChild);
+      }
+    }
+  };
+
+  applyInlineStyles(element, clone);
+  return clone;
 };

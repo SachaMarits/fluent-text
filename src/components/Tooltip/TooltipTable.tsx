@@ -190,7 +190,7 @@ const TooltipTable = () => {
             >
               {t('fermer')}
             </Button>
-            <Button color="success custom-success mt-2" onClick={() => handleButton()}>
+            <Button color="success mt-2" onClick={() => handleButton()}>
               {t('ajouter')} <i className="mdi mdi-plus" />
             </Button>
           </div>
