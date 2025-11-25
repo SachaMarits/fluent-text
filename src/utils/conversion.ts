@@ -3,6 +3,84 @@ export const decodeBase64 = (base64: string) => {
   return decodeURIComponent(escape(binaire));
 };
 
+// Fonction pour extraire l'URL de l'image de fond depuis le HTML
+export const extractBackgroundImageUrl = (htmlContent: string): string | null => {
+  // Méthode 1: Chercher dans le HTML brut avec une regex flexible
+  // Gère: url('...'), url("..."), url(...), avec ou sans espaces
+  const regexPatterns = [/background-image\s*:\s*url\(['"]([^'"]+)['"]\)/gi, /background-image\s*:\s*url\(([^)]+)\)/gi];
+
+  for (const pattern of regexPatterns) {
+    const match = htmlContent.match(pattern);
+    if (match) {
+      // Extraire l'URL du premier match trouvé
+      const urlMatch = match[0].match(/url\(['"]?([^'")]+)['"]?\)/i);
+      if (urlMatch && urlMatch[1]) {
+        return urlMatch[1].trim();
+      }
+    }
+  }
+
+  // Méthode 2: Parser le HTML et chercher dans l'attribut style de #text-editor-wrapper
+  const tempDiv = document.createElement('div');
+  tempDiv.innerHTML = htmlContent;
+  const wrapper = tempDiv.querySelector('#text-editor-wrapper') as HTMLElement;
+
+  if (wrapper) {
+    // Chercher dans l'attribut style inline
+    const styleAttr = wrapper.getAttribute('style');
+    if (styleAttr) {
+      const styleMatch = styleAttr.match(/background-image\s*:\s*url\(['"]?([^'")]+)['"]?\)/i);
+      if (styleMatch && styleMatch[1]) {
+        return styleMatch[1].trim();
+      }
+    }
+
+    // Chercher dans le style calculé (si le HTML a déjà été injecté)
+    if (wrapper.style.backgroundImage) {
+      const bgImage = wrapper.style.backgroundImage;
+      const urlMatch = bgImage.match(/url\(['"]?([^'")]+)['"]?\)/i);
+      if (urlMatch && urlMatch[1]) {
+        return urlMatch[1].trim();
+      }
+    }
+  }
+
+  return null;
+};
+
+// Fonction pour retirer l'image de fond du HTML (utilisée lors du chargement de templates)
+export const removeBackgroundImageFromHtml = (htmlContent: string): string => {
+  const tempDiv = document.createElement('div');
+  tempDiv.innerHTML = htmlContent;
+
+  const textEditorWrapper = tempDiv.querySelector('#text-editor-wrapper') as HTMLElement;
+
+  if (textEditorWrapper) {
+    // Retirer les propriétés d'image de fond du style
+    textEditorWrapper.style.backgroundImage = '';
+    textEditorWrapper.style.backgroundSize = '';
+    textEditorWrapper.style.backgroundPosition = '';
+    textEditorWrapper.style.backgroundRepeat = '';
+
+    // Si le style est vide après suppression, retirer l'attribut style
+    if (!textEditorWrapper.style.cssText || textEditorWrapper.style.cssText.trim() === '') {
+      textEditorWrapper.removeAttribute('style');
+    } else {
+      // Sinon, mettre à jour l'attribut style sans les propriétés d'image de fond
+      textEditorWrapper.setAttribute('style', textEditorWrapper.style.cssText);
+    }
+
+    return tempDiv.innerHTML;
+  }
+
+  // Si pas de wrapper, retirer l'image de fond via regex dans le HTML brut
+  return htmlContent
+    .replace(/background-image\s*:\s*url\([^)]+\)\s*;?/gi, '')
+    .replace(/background-size\s*:[^;]+;?/gi, '')
+    .replace(/background-position\s*:[^;]+;?/gi, '')
+    .replace(/background-repeat\s*:[^;]+;?/gi, '');
+};
+
 export const getContent = (id?: string, returnHtml: boolean = false, minified: boolean = false) => {
   const textEditor = document.getElementById(id || 'text-editor-document-text');
 

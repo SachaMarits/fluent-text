@@ -3,7 +3,7 @@ import { useTextEditorContext } from '../../context';
 import { useTranslation } from '../../translations';
 import Dropdown from '../Base/Dropdown';
 import { useSwal } from '../../hooks/useSwal';
-import { decodeBase64 } from '../../utils/conversion';
+import { decodeBase64, extractBackgroundImageUrl, removeBackgroundImageFromHtml } from '../../utils/conversion';
 import { useToast } from '../../hooks/useToast';
 import { FluentEditorFile } from '../../types/File';
 
@@ -13,7 +13,7 @@ interface ToolbarLayoutProps {
 
 const ToolbarLayout = ({ text }: ToolbarLayoutProps) => {
   const { t } = useTranslation();
-  const { hideTitles, hideGroupNames, showAttachments, attachments, setAttachments, templates } =
+  const { hideTitles, hideGroupNames, showAttachments, attachments, setAttachments, templates, setBackgroundImage } =
     useTextEditorContext();
 
   const [fullscreen, setFullscreen] = useState<boolean>(false);
@@ -34,10 +34,65 @@ const ToolbarLayout = ({ text }: ToolbarLayoutProps) => {
     if (template && text.current && (template.contentBase64 || template.content)) {
       swal.confirmation(t('remplacerContenu')).then(result => {
         if (result.isConfirmed) {
+          let templateContent = '';
           // @ts-ignore
-          if (template.contentBase64) text.current.innerHTML = decodeBase64(template.contentBase64);
+          if (template.contentBase64) templateContent = decodeBase64(template.contentBase64);
           // @ts-ignore
-          if (template.content) text.current.innerHTML = template.content;
+          if (template.content) templateContent = template.content;
+
+          // Extraire l'image de fond du template
+          let extractedImageUrl = extractBackgroundImageUrl(templateContent);
+          if (extractedImageUrl) {
+            extractedImageUrl = extractedImageUrl.replace(/&quot;/g, '"');
+            if (setBackgroundImage) {
+              setBackgroundImage(extractedImageUrl);
+            }
+          } else {
+            // Si aucune image n'est trouvée, réinitialiser
+            if (setBackgroundImage) {
+              setBackgroundImage('');
+            }
+          }
+
+          // Retirer l'image de fond du HTML du template avant de l'injecter
+          const cleanedTemplateContent = removeBackgroundImageFromHtml(templateContent);
+
+          // Charger le contenu du template (sans l'image de fond dans le HTML)
+          if (text.current) {
+            text.current.innerHTML = cleanedTemplateContent;
+          }
+
+          // Appliquer les styles sur l'éditeur après un court délai pour s'assurer que le DOM est mis à jour
+          setTimeout(() => {
+            if (text.current) {
+              // Appliquer les styles sur l'éditeur principal
+              if (extractedImageUrl) {
+                text.current.style.backgroundSize = 'cover';
+                text.current.style.backgroundPosition = 'center';
+                text.current.style.backgroundRepeat = 'no-repeat';
+                text.current.style.backgroundImage = `url(${extractedImageUrl})`;
+              } else {
+                text.current.style.backgroundImage = '';
+                text.current.style.backgroundSize = '';
+                text.current.style.backgroundPosition = '';
+                text.current.style.backgroundRepeat = '';
+              }
+
+              // Vérifier si l'image de fond est dans le wrapper après injection
+              if (!extractedImageUrl) {
+                const wrapper = text.current.querySelector('#text-editor-wrapper') as HTMLElement;
+                if (wrapper && wrapper.style.backgroundImage) {
+                  const bgImage = wrapper.style.backgroundImage;
+                  const imageUrl = bgImage.replace(/url\(['"]?([^'"]+)['"]?\)/i, '$1');
+                  if (imageUrl) {
+                    if (setBackgroundImage) {
+                      setBackgroundImage(imageUrl.trim());
+                    }
+                  }
+                }
+              }
+            }
+          }, 0);
         }
       });
     } else {

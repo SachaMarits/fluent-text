@@ -6,7 +6,7 @@ import { TranslationProvider, Language } from './translations';
 import { useBreakpoint } from './hooks/useBreakpoint';
 import { FluentEditorTemplate } from './types/Template';
 import { Toaster } from 'sonner';
-import { decodeBase64, getContent } from './utils/conversion';
+import { decodeBase64, getContent, extractBackgroundImageUrl } from './utils/conversion';
 import ShortenedString from './components/Base/ShortenedString';
 
 import './styles/main.scss';
@@ -188,54 +188,6 @@ export default function FluentText({
       // @ts-ignore
       text.current.querySelectorAll(`[style*="text-align: justify"]`).forEach(e => (e.align = 'justify'));
     }
-  };
-
-  // Fonction pour extraire l'URL de l'image de fond depuis le HTML
-  const extractBackgroundImageUrl = (htmlContent: string): string | null => {
-    // Méthode 1: Chercher dans le HTML brut avec une regex flexible
-    // Gère: url('...'), url("..."), url(...), avec ou sans espaces
-    const regexPatterns = [
-      /background-image\s*:\s*url\(['"]([^'"]+)['"]\)/gi,
-      /background-image\s*:\s*url\(([^)]+)\)/gi,
-    ];
-
-    for (const pattern of regexPatterns) {
-      const match = htmlContent.match(pattern);
-      if (match) {
-        // Extraire l'URL du premier match trouvé
-        const urlMatch = match[0].match(/url\(['"]?([^'")]+)['"]?\)/i);
-        if (urlMatch && urlMatch[1]) {
-          return urlMatch[1].trim();
-        }
-      }
-    }
-
-    // Méthode 2: Parser le HTML et chercher dans l'attribut style de #text-editor-wrapper
-    const tempDiv = document.createElement('div');
-    tempDiv.innerHTML = htmlContent;
-    const wrapper = tempDiv.querySelector('#text-editor-wrapper') as HTMLElement;
-
-    if (wrapper) {
-      // Chercher dans l'attribut style inline
-      const styleAttr = wrapper.getAttribute('style');
-      if (styleAttr) {
-        const styleMatch = styleAttr.match(/background-image\s*:\s*url\(['"]?([^'")]+)['"]?\)/i);
-        if (styleMatch && styleMatch[1]) {
-          return styleMatch[1].trim();
-        }
-      }
-
-      // Chercher dans le style calculé (si le HTML a déjà été injecté)
-      if (wrapper.style.backgroundImage) {
-        const bgImage = wrapper.style.backgroundImage;
-        const urlMatch = bgImage.match(/url\(['"]?([^'")]+)['"]?\)/i);
-        if (urlMatch && urlMatch[1]) {
-          return urlMatch[1].trim();
-        }
-      }
-    }
-
-    return null;
   };
 
   useEffect(() => {
