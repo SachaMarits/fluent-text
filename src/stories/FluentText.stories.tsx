@@ -51,22 +51,6 @@ export const DefaultValue: Story = {
   },
 };
 
-export const DefaultValueWithBackground: Story = {
-  parameters: {
-    docs: {
-      description: {
-        story: 'FluentText editor with a default value.',
-      },
-    },
-  },
-  args: {
-    height: 500,
-    defaultValue: templates[2].contentBase64,
-    defaultValueIsBase64: true,
-    onContentChange: fn(),
-  },
-};
-
 export const HideTitlesAndGroupNames: Story = {
   parameters: {
     docs: {
