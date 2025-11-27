@@ -189,16 +189,28 @@ export const Templates: Story = {
   },
 };
 
-export const Playground: Story = {
+export const Variables: Story = {
   args: {
     height: 500,
     templates,
+    options: ['text'],
     onContentChange: fn(),
+    variables: [
+      {
+        name: 'User last name',
+        value: 'XXUSERLASTNAMEXX',
+      },
+      {
+        name: 'User first name',
+        value: 'XXUSERFIRSTNAMEXX',
+      },
+    ],
   },
   parameters: {
     docs: {
       description: {
-        story: 'FluentText editor with templates.',
+        story:
+          'Provide variables to the editor to display in the text. Then in your mailing system, you can replace the variables with the actual values.',
       },
     },
   },

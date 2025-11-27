@@ -8,6 +8,7 @@ import { FluentEditorTemplate } from './types/Template';
 import { Toaster } from 'sonner';
 import { decodeBase64, getContent, extractBackgroundImageUrl } from './utils/conversion';
 import ShortenedString from './components/Base/ShortenedString';
+import { Variable } from './types/Variable';
 
 import './styles/main.scss';
 
@@ -43,6 +44,7 @@ interface TextEditorProps {
 
   // External data
   templates?: FluentEditorTemplate[] | undefined;
+  variables?: Variable[];
   attachments?: FluentEditorFile[];
   setAttachments?: React.Dispatch<React.SetStateAction<FluentEditorFile[]>>;
   onContentChange?: (content: string, base64Content: string) => void;
@@ -76,6 +78,7 @@ export default function FluentText({
 
   // External data
   templates,
+  variables = [],
   attachments = [],
   setAttachments = () => {},
   onContentChange,
@@ -320,6 +323,7 @@ export default function FluentText({
           setIsHoveringAction,
           backgroundImage,
           setBackgroundImage,
+          variables,
         }}
       >
         <div

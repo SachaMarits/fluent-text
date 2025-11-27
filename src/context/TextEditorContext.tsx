@@ -1,6 +1,7 @@
 import { createContext, useContext } from 'react';
 import { FluentEditorFile } from '../types/File';
 import { FluentEditorTemplate } from '../types/Template';
+import { Variable } from '../types/Variable';
 
 export interface TextEditorContextType {
   hideTitles: boolean;
@@ -24,6 +25,7 @@ export interface TextEditorContextType {
   setIsEditing: (isEditing: boolean) => void;
   backgroundImage: string;
   setBackgroundImage: (image: string) => void;
+  variables: Variable[];
 }
 
 export const TextEditorContext = createContext<TextEditorContextType | undefined>(undefined);

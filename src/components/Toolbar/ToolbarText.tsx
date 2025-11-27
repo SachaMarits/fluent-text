@@ -70,12 +70,6 @@ const fontOptions: Option[] = [
   { id: 'Georgia, serif', text: 'Georgia' },
   { id: 'Courier New, monospace', text: 'Courier New' },
 ];
-interface VariableOption {
-  id: number;
-  libelle: string;
-  variable: string;
-  text: string;
-}
 
 type ToolbarTextProps = {
   handleStyle: (style: string, value?: string | undefined) => void;
@@ -83,11 +77,10 @@ type ToolbarTextProps = {
 
 export default function ToolbarText({ handleStyle }: ToolbarTextProps) {
   const { t } = useTranslation();
-  const { hideTitles, hideGroupNames, textOptions } = useTextEditorContext();
+  const { hideTitles, hideGroupNames, textOptions, variables } = useTextEditorContext();
   const [linkName, setLinkName] = useState('');
   const [linkValue, setLinkValue] = useState('');
   const [savedSelection, setSavedSelection] = useState<Range>(document.createRange());
-  const [variables] = useState<VariableOption[]>([]);
   const [isLinkTooltipOpen, setIsLinkTooltipOpen] = useState<boolean>(false);
   const { windowWidth } = useBreakpoint();
   const overrideFontFaces = () => {
@@ -100,15 +93,15 @@ export default function ToolbarText({ handleStyle }: ToolbarTextProps) {
   };
 
   const handleVariable = (id: string) => {
-    const variable = variables.find(v => v.id === +id);
+    const variable = variables.find(v => v.value === id);
     if (variable) {
-      const textToInsert = variable.text;
+      const textToInsert = variable.name;
       const element = document.createElement('span');
-      element.classList.add('text-editor-donnees-utilisateurs');
+      element.classList.add('text-editor-variable-data');
       element.setAttribute('title', t('explicationVariable'));
       element.setAttribute('contentEditable', 'false');
       element.setAttribute('translate', 'no');
-      element.setAttribute('variable', variable.variable);
+      element.setAttribute('variable', variable.value);
       element.textContent = textToInsert;
 
       const selection = window.getSelection();
@@ -254,9 +247,12 @@ export default function ToolbarText({ handleStyle }: ToolbarTextProps) {
           </>
         )}
 
-        {textOptions.some((o: string) => o === 'variable') && (
+        {textOptions.some((o: string) => o === 'variable') && variables.length > 0 && (
           <Dropdown
-            options={variables}
+            options={variables.map(v => ({
+              id: v.value,
+              text: v.name,
+            }))}
             toggle={
               <button className="btn btn-option btn-collapse" title={hideTitles ? '' : t('ajouterVariable')}>
                 <i className="mdi mdi-text-account" />
