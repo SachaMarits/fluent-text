@@ -1,152 +1,146 @@
+
+<div align="center">
+
 # FluentText
 
-Un composant React moderne et flexible pour le texte fluide, construit avec TypeScript et Vite.
+![npm version](https://img.shields.io/npm/v/fluent-text)
+![npm downloads](https://img.shields.io/npm/dm/fluent-text)
+![license](https://img.shields.io/npm/l/fluent-text)
+![TypeScript](https://img.shields.io/badge/TypeScript-Ready-blue)
+
+**A modern, feature-rich rich text editor component for React**
+
+
+[Features](#features) • [Installation](#installation) • [Quick Start](#quick-start) • [Documentation](#documentation)
+
+</div>
+
+
+![Example of FluentText](example.png)
+
+## Overview
+
+FluentText is a powerful, customizable rich text editor built for React applications. It provides a comprehensive set of editing tools including text formatting, image insertion, color management, layout options, and template support. Perfect for email editors, content management systems, and any application requiring rich text editing capabilities.
+
+## Features
+
+✨ **Rich Text Editing**
+- Full text formatting (bold, italic, underline, strikethrough)
+- Font family and size customization
+- Text alignment (left, center, right, justify)
+- Link insertion and management
+- Variable insertion for dynamic content
+
+🎨 **Visual Customization**
+- Color picker for text and background colors
+- Background image support
+- Customizable toolbar layout (horizontal/vertical)
+- Responsive design support
+- Email-optimized HTML output
+
+📎 **Advanced Features**
+- Image insertion and management
+- File attachments support
+- Template system for reusable content
+- Variable system for dynamic placeholders
+- Base64 content encoding/decoding
+
+🌍 **Internationalization**
+- Built-in support for English and French
+
+⚙️ **Developer Experience**
+- Fully typed with TypeScript
+- Highly customizable via props
+- Debounced content change callbacks
+- Disabled state support
+- Minified output option
 
 ## Installation
 
 ```bash
-# Avec npm
 npm install fluent-text
-
-# Avec yarn
+# or
 yarn add fluent-text
-
-# Avec pnpm
+# or
 pnpm add fluent-text
 ```
 
-## Utilisation
+### Peer Dependencies
 
-### Importation de base
+FluentText requires React 18+ and React DOM 18+:
+
+```bash
+npm install react react-dom
+```
+
+## Quick Start
 
 ```tsx
 import React from 'react';
 import { FluentText } from 'fluent-text';
-
-function App() {
-  return (
-    <div>
-      <FluentText>Texte par défaut</FluentText>
-      <FluentText variant="primary">Texte principal</FluentText>
-      <FluentText variant="secondary">Texte secondaire</FluentText>
-    </div>
-  );
-}
-```
-
-### Avec des styles personnalisés
-
-```tsx
-import React from 'react';
-import { FluentText } from 'fluent-text';
-import 'fluent-text/styles'; // Import des styles CSS
-
-function App() {
-  return (
-    <FluentText 
-      className="my-custom-class"
-      variant="primary"
-    >
-      Texte avec styles personnalisés
-    </FluentText>
-  );
-}
-```
-
-### Importation des styles CSS
-
-```tsx
-// Import des styles par défaut
 import 'fluent-text/styles';
 
-// Ou importez seulement les styles dont vous avez besoin
-import 'fluent-text/dist/style.css';
+function App() {
+  const handleContentChange = (htmlContent: string, base64Content: string) => {
+    console.log('HTML:', htmlContent);
+    console.log('Base64:', base64Content);
+  };
+
+  return (
+    <FluentText
+      onContentChange={handleContentChange}
+      height={500}
+    />
+  );
+}
+
+export default App;
 ```
 
-## Props
+## Documentation
 
-| Prop | Type | Défaut | Description |
-|------|------|--------|-------------|
-| `children` | `React.ReactNode` | - | Le contenu texte à afficher |
-| `className` | `string` | `''` | Classes CSS additionnelles |
-| `variant` | `'default' \| 'primary' \| 'secondary'` | `'default'` | Variante du composant |
+### Types and props
 
-## Développement
+Details types and props: 
+- [Types](TypesAndProps.md#Types)
+- [Props](TypesAndProps.md#Props)
 
-### Prérequis
+You can also test it live with (FluentText's Storybook)[sqd].
 
-- Node.js 18+
-- pnpm (recommandé) ou npm
+## Internationalization
 
-### Installation des dépendances
+FluentText supports multiple languages out of the box:
 
-```bash
-pnpm install
-```
+- English (`'en'`) - Default
+- French (`'fr'`)
 
-### Scripts disponibles
+## Browser Support
 
-```bash
-# Compilation en mode développement (avec watch)
-pnpm dev
+FluentText works in all modern browsers that support:
+- React 18+
+- ContentEditable API
+- CSS Grid and Flexbox
 
-# Compilation de production
-pnpm build
+## License
 
-# Vérification des types TypeScript
-pnpm type-check
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-# Linting
-pnpm lint
-pnpm lint:fix
+## Support
 
-# Formatage du code
-pnpm format
-```
+- 📖 [Documentation](https://github.com/SachaMarits/fluent-text#readme)
+- 🐛 [Report a Bug](https://github.com/SachaMarits/fluent-text/issues)
 
-### Test local avec npm link
+## Acknowledgments
 
-```bash
-# Dans le dossier du package
-pnpm build
-pnpm link
+Built with ❤️ using React, TypeScript, and modern web technologies.
 
-# Dans votre projet de test
-pnpm link fluent-text
-```
+---
 
-## Structure du projet
+<div align="center">
 
-```
-fluent-text/
-├── src/
-│   ├── components/
-│   │   └── index.ts
-│   ├── styles.css
-│   └── index.ts
-├── dist/                 # Fichiers compilés (générés)
-├── package.json
-├── tsconfig.json
-├── vite.config.ts
-├── .eslintrc.json
-├── .prettierrc.json
-├── .gitignore
-├── .npmignore
-└── README.md
-```
+Made with FluentText
 
-## Licence
+[⬆ Back to Top](#fluenttext)
 
-MIT
+</div>
 
-## Contribution
-
-Les contributions sont les bienvenues ! N'hésitez pas à ouvrir une issue ou une pull request.
-
-## Changelog
-
-### 1.0.0
-- Version initiale avec composant FluentText de base
-- Support TypeScript complet
-- Styles CSS modulaires
-- Configuration Vite pour la compilation
