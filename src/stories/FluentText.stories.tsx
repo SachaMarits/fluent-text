@@ -3,7 +3,7 @@ import React from 'react';
 
 import FluentText from '../FluentText';
 import { fn } from 'storybook/test';
-import { defaultValue } from './FlutentText.defaultvalue';
+import { defaultValue } from './FluentText.defaultValue';
 import { useArgs } from 'storybook/internal/preview-api';
 import { FluentEditorFile } from '../types/File';
 import templates from './FluentText.templates';
