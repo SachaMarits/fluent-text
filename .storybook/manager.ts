@@ -4,7 +4,7 @@ import { create } from 'storybook/theming';
 const myTheme = create({
   base: 'dark',
   brandTitle: 'FluentText Editor',
-  brandImage: '/logo.png',
+  brandImage: 'logo.png',
   brandTarget: '_self',
   colorPrimary: '#2596be',
 });
