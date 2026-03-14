@@ -336,7 +336,7 @@ export default function FluentText({
             <div
               id={id}
               contentEditable={!disabled}
-              className={`text-editor-content${responsive ? ' text-editor-responsive' : ''} ${
+              className={`fluent-text-editor-content text-editor-content${responsive ? ' text-editor-responsive' : ''} ${
                 disabled ? 'text-editor-disabled' : ''
               }`}
               style={{
