@@ -104,7 +104,7 @@ Details types and props:
 - [Types](TypesAndProps.md#Types)
 - [Props](TypesAndProps.md#Props)
 
-You can also test it live with (FluentText's Storybook)[sqd].
+You can also test it live with [FluentText's Storybook](https://sachamarits.github.io/fluent-text).
 
 ## Internationalization
 
@@ -126,7 +126,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Support
 
-- 📖 [Documentation](https://github.com/SachaMarits/fluent-text#readme)
+- 📖 [Documentation](https://sachamarits.github.io/fluent-text)
 - 🐛 [Report a Bug](https://github.com/SachaMarits/fluent-text/issues)
 
 ## Acknowledgments
