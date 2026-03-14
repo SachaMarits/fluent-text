@@ -1,7 +1,7 @@
 {
   "name": "fluent-text",
   "author": "Sacha Marits <sacha.marits@gmail.com>",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "FluentText is a powerful, customizable rich text editor built for React applications. It provides a comprehensive set of editing tools including text formatting, image insertion, color management, layout options, and template support. Perfect for email editors, content management systems, and any application requiring rich text editing capabilities.",
   "type": "module",
   "main": "./dist/index.js",
@@ -14,7 +14,9 @@
     },
     "./styles": "./dist/index.css"
   },
-  "sideEffects": ["**/*.css"],
+  "sideEffects": [
+    "**/*.css"
+  ],
   "files": [
     "dist",
     "README.md",
