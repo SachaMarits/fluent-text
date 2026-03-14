@@ -169,8 +169,42 @@
     * {
       max-width: 560px;
     }
-    b {
-      font-weight: bold;
+
+    /* Isolation des styles de formatage : empêche les resets CSS du projet hôte d'écraser gras/italique/etc. */
+    &.fluent-text-editor-content {
+      font-weight: 400;
+      font-style: normal;
+      font-size: 16px;
+      line-height: 1.5;
+      color: #212529;
+
+      b,
+      strong {
+        font-weight: 700 !important;
+      }
+      i,
+      em {
+        font-style: italic !important;
+      }
+      u {
+        text-decoration: underline !important;
+      }
+      s,
+      strike {
+        text-decoration: line-through !important;
+      }
+      /* Sous-combinaisons courantes */
+      b i,
+      b em,
+      strong i,
+      strong em,
+      i b,
+      em b,
+      i strong,
+      em strong {
+        font-weight: 700 !important;
+        font-style: italic !important;
+      }
     }
   }
 

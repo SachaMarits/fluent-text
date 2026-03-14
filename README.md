@@ -78,7 +78,6 @@ npm install react react-dom
 ```tsx
 import React from 'react';
 import { FluentText } from 'fluent-text';
-import 'fluent-text/styles';
 
 function App() {
   const handleContentChange = (htmlContent: string, base64Content: string) => {

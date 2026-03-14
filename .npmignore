@@ -13,11 +13,6 @@ __tests__/
 tests/
 test/
 
-# Documentation
-README.md
-CHANGELOG.md
-LICENSE
-
 # Development dependencies
 node_modules/
 package-lock.json

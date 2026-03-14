@@ -1,7 +1,8 @@
 {
   "name": "fluent-text",
+  "author": "Sacha Marits <sacha.marits@gmail.com>",
   "version": "1.0.0",
-  "description": "Un composant React moderne pour le texte fluide",
+  "description": "FluentText is a powerful, customizable rich text editor built for React applications. It provides a comprehensive set of editing tools including text formatting, image insertion, color management, layout options, and template support. Perfect for email editors, content management systems, and any application requiring rich text editing capabilities.",
   "type": "module",
   "main": "./dist/index.js",
   "module": "./dist/index.js",
@@ -11,11 +12,14 @@
       "import": "./dist/index.js",
       "types": "./dist/index.d.ts"
     },
-    "./styles": "./dist/style.css"
+    "./styles": "./dist/index.css"
   },
+  "sideEffects": ["**/*.css"],
   "files": [
     "dist",
-    "README.md"
+    "README.md",
+    "LICENSE",
+    "example.png"
   ],
   "scripts": {
     "build": "vite build",
@@ -36,7 +40,6 @@
     "ui",
     "text"
   ],
-  "author": "Votre nom",
   "license": "MIT",
   "peerDependencies": {
     "react": ">=18.0.0",
@@ -63,7 +66,8 @@
     "sweetalert2": "^11.26.2",
     "typescript": "^5.0.0",
     "vite": "^4.4.0",
-    "vite-plugin-dts": "^3.5.0"
+    "vite-plugin-dts": "^3.5.0",
+    "vite-plugin-lib-inject-css": "^2.2.2"
   },
   "repository": {
     "type": "git",

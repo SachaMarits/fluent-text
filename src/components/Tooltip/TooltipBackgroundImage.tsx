@@ -36,7 +36,6 @@ const TooltipBackgroundImage = ({ text }: TooltipBackgroundImageProps) => {
   const applyBackgroundImageToContent = (imageUrl: string) => {
     if (text.current) {
       const wrapper = document.getElementById('text-editor-document-text') as HTMLElement;
-      console.log('wrapper', wrapper);
       if (wrapper) {
         wrapper.style.backgroundImage = `url(${imageUrl})`;
         wrapper.style.backgroundSize = 'cover';
